@@ -1,0 +1,15 @@
+{
+  "files.associations": {
+    "scb.h": "c",
+    "flash.h": "c",
+    "systick.h": "c",
+    "timer.h": "c",
+    "api-io.h": "c",
+    "vector.h": "c",
+    "api-uart.h": "c",
+    "pins.h": "c",
+    "sync.h": "c",
+    "ring-buffer.h": "c",
+    "flash_common_all.h": "c"
+  }
+}
