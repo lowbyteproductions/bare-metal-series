@@ -1,7 +1,7 @@
 {
   "configurations": [
     {
-      "name": "Debug Application",
+      "name": "JLink: Debug Application",
       "cwd": "${workspaceFolder}/app",
       "executable": "./firmware.elf",
       "serverpath": "/usr/bin/JLinkGDBServer",
@@ -14,7 +14,7 @@
       "preLaunchTask": "build_debug"
     },
     {
-      "name": "Attach to active",
+      "name": "JLink: Attach to active",
       "cwd": "${workspaceFolder}/app",
       "executable": "./firmware.elf",
       "serverpath": "/usr/bin/JLinkGDBServer",
@@ -23,7 +23,30 @@
       "type": "cortex-debug",
       "device": "STM32F401RE",
       "runToEntryPoint": "main",
+      "interface": "swd"
+    },
+    {
+      "name": "ST-Link: Debug Application",
+      "cwd": "${workspaceFolder}/app",
+      "executable": "./firmware.elf",
+      "servertype": "stutil",
+      "request": "launch",
+      "type": "cortex-debug",
+      "device": "STM32F401RE",
+      "runToEntryPoint": "main",
       "interface": "swd",
+      "preLaunchTask": "build_debug"
+    },
+    {
+      "name": "ST-Link: Attach to active",
+      "cwd": "${workspaceFolder}/app",
+      "executable": "./firmware.elf",
+      "servertype": "stutil",
+      "request": "attach",
+      "type": "cortex-debug",
+      "device": "STM32F401RE",
+      "runToEntryPoint": "main",
+      "interface": "swd"
     }
   ]
 }

@@ -41,6 +41,22 @@ cd app
 make
 ```
 
-## Note on ST-Link
+## Debuggers
 
-The repository does not yet include instructions or tools for working with the ST-Link. If you get the ST-Link up and running, please submit a PR with a *separate* .vscode directory (`.vscode-stlink`) for tasks and launch configurations, along with usage instructions for the readme. Your help will be very much appreciated!
+### J-Link
+
+The YouTube series makes use of J-Link debugger hardware and JLinkGDBServer for integrating with VS Code's debug functionality.
+
+You can use the "JLink: Debug Application" and "JLink: Attach to active" VSCode tasks to debug your built binaries.
+
+### ST-Link
+
+ST-Link is alternative debugger that you can use if you don't have a JLink debugger.
+
+If you're using the same STM32F401RE Nucleo board presented in the YouTube series, ST-Link debugging hardware is already provided on the board (see the [Day 0 video's Hardware section](https://youtu.be/uQQsDWLRDuI?t=1000)).
+
+It's recommended that you install the [ST-Link drivers](https://www.st.com/en/development-tools/stsw-link009.html).
+
+You'll also need to install the [open source ST-Link debugging tools](https://github.com/stlink-org/stlink). The primary application you'll need from that tool-set is *stutil*. Verify that *stutil* is available in your path before attempting to use the VSCode ST-Link debugging tasks.
+
+Once your drivers and debugging tools are installed, you can use the "ST-Link: Debug Application" and "ST-Link: Attach active" VSCode tasks to debug your firmware over ST-Link.
