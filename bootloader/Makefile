@@ -9,7 +9,7 @@ SRC_DIR     = src
 INC_DIR     = inc
 OPENCM3_DIR = ../libopencm3
 
-BINARY = firmware
+BINARY = bootloader
 
 ###############################################################################
 # Basic Device Setup
@@ -55,9 +55,6 @@ CSTD		?= -std=c99
 # Source files
 
 OBJS		+= $(SRC_DIR)/$(BINARY).o
-OBJS		+= $(SRC_DIR)/bootloader.o
-OBJS		+= $(SRC_DIR)/core/system.o
-OBJS		+= $(SRC_DIR)/core/timer.o
 
 ###############################################################################
 # C flags
@@ -139,6 +136,7 @@ print-%:
 %.bin: %.elf
 	@#printf "  OBJCOPY $(*).bin\n"
 	$(Q)$(OBJCOPY) -Obinary $(*).elf $(*).bin
+	$(Q)python pad-bootloader.py
 
 %.hex: %.elf
 	@#printf "  OBJCOPY $(*).hex\n"
