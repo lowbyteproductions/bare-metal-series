@@ -1,4 +1,4 @@
-#include "core/timer.h"
+#include "timer.h"
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/rcc.h>
 
