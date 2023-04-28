@@ -56,6 +56,7 @@ int main(void) {
       uart_write_byte(data + 1);
     }
 
+    system_delay(1000);
     // Do useful work
   }
 
