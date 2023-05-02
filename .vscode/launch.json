@@ -14,7 +14,20 @@
       "preLaunchTask": "build_debug"
     },
     {
-      "name": "JLink: Attach to active",
+      "name": "JLink: Debug Bootloader",
+      "cwd": "${workspaceFolder}/bootloader",
+      "executable": "./bootloader.elf",
+      "serverpath": "/usr/bin/JLinkGDBServer",
+      "servertype": "jlink",
+      "request": "launch",
+      "type": "cortex-debug",
+      "device": "STM32F401RE",
+      "runToEntryPoint": "main",
+      "interface": "swd",
+      "preLaunchTask": "build_bootloader"
+    },
+    {
+      "name": "JLink: Attach to Application",
       "cwd": "${workspaceFolder}/app",
       "executable": "./firmware.elf",
       "serverpath": "/usr/bin/JLinkGDBServer",
@@ -24,6 +37,19 @@
       "device": "STM32F401RE",
       "runToEntryPoint": "main",
       "interface": "swd"
+    },
+    {
+      "name": "JLink: Attach to Bootloader",
+      "cwd": "${workspaceFolder}/bootloader",
+      "executable": "./bootloader.elf",
+      "serverpath": "/usr/bin/JLinkGDBServer",
+      "servertype": "jlink",
+      "request": "attach",
+      "type": "cortex-debug",
+      "device": "STM32F401RE",
+      "runToEntryPoint": "main",
+      "interface": "swd",
+      "preLaunchTask": "build_bootloader"
     },
     {
       "name": "ST-Link: Debug Application",
@@ -38,9 +64,32 @@
       "preLaunchTask": "build_debug"
     },
     {
-      "name": "ST-Link: Attach to active",
+      "name": "ST-Link: Debug Bootloader",
+      "cwd": "${workspaceFolder}/bootloader",
+      "executable": "./bootloader.elf",
+      "servertype": "stutil",
+      "request": "launch",
+      "type": "cortex-debug",
+      "device": "STM32F401RE",
+      "runToEntryPoint": "main",
+      "interface": "swd",
+      "preLaunchTask": "build_bootloader"
+    },
+    {
+      "name": "ST-Link: Attach to Application",
       "cwd": "${workspaceFolder}/app",
       "executable": "./firmware.elf",
+      "servertype": "stutil",
+      "request": "attach",
+      "type": "cortex-debug",
+      "device": "STM32F401RE",
+      "runToEntryPoint": "main",
+      "interface": "swd"
+    },
+    {
+      "name": "ST-Link: Attach to Bootloader",
+      "cwd": "${workspaceFolder}/bootloader",
+      "executable": "./bootloader.elf",
       "servertype": "stutil",
       "request": "attach",
       "type": "cortex-debug",

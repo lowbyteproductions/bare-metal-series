@@ -21,7 +21,7 @@ static comms_packet_t last_transmitted_packet = { .length = 0, .data = {0}, .crc
 static comms_packet_t packet_buffer[PACKET_BUFFER_LENGTH];
 static uint32_t packet_read_index = 0;
 static uint32_t packet_write_index = 0;
-static uint32_t packet_buffer_mask = PACKET_BUFFER_LENGTH;
+static uint32_t packet_buffer_mask = PACKET_BUFFER_LENGTH - 1;
 
 static bool comms_is_single_byte_packet(const comms_packet_t* packet, uint8_t byte) {
   if (packet->length != 1) {
@@ -125,6 +125,7 @@ bool comms_packets_available(void) {
 
 void comms_write(comms_packet_t* packet) {
   uart_write((uint8_t*)packet, PACKET_LENGTH);
+  comms_packet_copy(packet, &last_transmitted_packet);
 }
 
 void comms_read(comms_packet_t* packet) {
@@ -133,5 +134,5 @@ void comms_read(comms_packet_t* packet) {
 }
 
 uint8_t comms_compute_crc(comms_packet_t* packet) {
-  return crc8((uint8_t*)&packet, PACKET_LENGTH - PACKET_CRC_BYTES);
+  return crc8((uint8_t*)packet, PACKET_LENGTH - PACKET_CRC_BYTES);
 }
