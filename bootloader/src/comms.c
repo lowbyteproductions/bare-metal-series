@@ -46,7 +46,7 @@ void comms_create_single_byte_packet(comms_packet_t* packet, uint8_t byte) {
   memset(packet, 0xff, sizeof(comms_packet_t));
   packet->length = 1;
   packet->data[0] = byte;
-  packet->crc = comms_compute_crc(&retx_packet);
+  packet->crc = comms_compute_crc(packet);
 }
 
 void comms_setup(void) {
