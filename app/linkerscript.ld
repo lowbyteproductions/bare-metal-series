@@ -38,6 +38,9 @@ SECTIONS
 		KEEP (*(.bootloader_section))
 
 		*(.vectors)	/* Vector table */
+
+		KEEP (*(.firmware_info))
+
 		*(.text*)	/* Program code */
 		. = ALIGN(4);
 		*(.rodata*)	/* Read-only data */

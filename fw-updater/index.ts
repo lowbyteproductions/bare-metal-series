@@ -23,9 +23,16 @@ const BL_PACKET_READY_FOR_DATA_DATA0    = (0x48);
 const BL_PACKET_UPDATE_SUCCESSFUL_DATA0 = (0x54);
 const BL_PACKET_NACK_DATA0              = (0x59);
 
-const BOOTLOADER_SIZE = 0x8000;
+const BOOTLOADER_SIZE                   = (0x8000);
+const VECTOR_TABLE_SIZE                 = (0x01AC);
+const FIRMWARE_INFO_SIZE                = (10 * 4);
 
-const DEVICE_ID  = (0x42);
+const FWINFO_VALIDATE_FROM              = (VECTOR_TABLE_SIZE + FIRMWARE_INFO_SIZE);
+const FWINFO_DEVICE_ID_OFFSET           = (VECTOR_TABLE_SIZE + (1 * 4));
+const FWINFO_VERSION_OFFSET             = (VECTOR_TABLE_SIZE + (2 * 4));
+const FWINFO_LENGTH_OFFSET              = (VECTOR_TABLE_SIZE + (3 * 4));
+const FWINFO_CRC32_OFFSET               = (VECTOR_TABLE_SIZE + (9 * 4));
+
 const SYNC_SEQ  = Buffer.from([0xc4, 0x55, 0x7e, 0x10]);
 const DEFAULT_TIMEOUT  = (5000);
 
@@ -50,6 +57,24 @@ const crc8 = (data: Buffer | Array<number>) => {
 
   return crc;
 };
+
+const crc32 = (data: Buffer, length: number) => {
+  let byte;
+  let crc = 0xffffffff;
+  let mask;
+
+  for (let i = 0; i < length; i++) {
+     byte = data[i];
+     crc = (crc ^ byte) >>> 0;
+
+     for (let j = 0; j < 8; j++) {
+        mask = (-(crc & 1)) >>> 0;
+        crc = ((crc >>> 1) ^ (0xedb88320 & mask)) >>> 0;
+     }
+  }
+
+  return (~crc) >>> 0;
+}
 
 // Async delay function, which gives the event loop time to process outside input
 const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
@@ -244,6 +269,14 @@ const main = async () => {
   const fwLength = fwImage.length;
   Logger.success(`Read firmware image (${fwLength} bytes)`);
 
+  Logger.success(`Injecting into firmware information section`);
+  fwImage.writeUInt32LE(fwLength, FWINFO_LENGTH_OFFSET);
+  fwImage.writeUInt32LE(0x00000001, FWINFO_VERSION_OFFSET);
+
+  const crcValue = crc32(fwImage.slice(FWINFO_VALIDATE_FROM), fwLength - (VECTOR_TABLE_SIZE + FIRMWARE_INFO_SIZE));
+  Logger.info(`Computed CRC value: 0x${crcValue.toString(16).padStart(8, '0')}`);
+  fwImage.writeUInt32LE(crcValue, FWINFO_CRC32_OFFSET);
+
   Logger.info('Attempting to sync with the bootloader');
   await syncWithBootloader();
   Logger.success('Synced!');
@@ -258,9 +291,10 @@ const main = async () => {
   await waitForSingleBytePacket(BL_PACKET_DEVICE_ID_REQ_DATA0);
   Logger.success('Device ID request recieved');
 
-  const deviceIDPacket = new Packet(2, Buffer.from([BL_PACKET_DEVICE_ID_RES_DATA0, DEVICE_ID]));
+  const deviceId = fwImage[FWINFO_DEVICE_ID_OFFSET];
+  const deviceIDPacket = new Packet(2, Buffer.from([BL_PACKET_DEVICE_ID_RES_DATA0, deviceId]));
   writePacket(deviceIDPacket);
-  Logger.info(`Responding with device ID 0x${DEVICE_ID.toString(16)}`);
+  Logger.info(`Responding with device ID 0x${deviceId.toString(16)}`);
 
   Logger.info('Waiting for firmware length request');
   await waitForSingleBytePacket(BL_PACKET_FW_LENGTH_REQ_DATA0);
