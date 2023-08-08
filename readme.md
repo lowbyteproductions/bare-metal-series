@@ -36,6 +36,10 @@ cd libopencm3
 make
 cd ..
 
+# Build the bootloader firmware
+cd bootloader
+make
+
 # Build the main application firmware
 cd app
 make
