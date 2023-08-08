@@ -39,6 +39,7 @@ cd ..
 # Build the bootloader firmware
 cd bootloader
 make
+cd ..
 
 # Build the main application firmware
 cd app
