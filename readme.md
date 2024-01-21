@@ -10,7 +10,7 @@ This series is all about building bare-metal firmware for a Cortex-M4 STM32 micr
 
 You need to have the following installed and properly setup. Ensure that they are available in your path.
 
-- [GNU ARM Embedded tools](https://developer.arm.com/downloads/-/gnu-rm)
+- [GNU ARM Embedded tools](https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads)
 - [GNU Make](https://www.gnu.org/software/make/)
 
 ### When using vscode
