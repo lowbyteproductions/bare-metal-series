@@ -65,3 +65,13 @@ It's recommended that you install the [ST-Link drivers](https://www.st.com/en/de
 You'll also need to install the [open source ST-Link debugging tools](https://github.com/stlink-org/stlink). The primary application you'll need from that tool-set is *stutil*. Verify that *stutil* is available in your path before attempting to use the VSCode ST-Link debugging tasks.
 
 Once your drivers and debugging tools are installed, you can use the "ST-Link: Debug Application" and "ST-Link: Attach active" VSCode tasks to debug your firmware over ST-Link.
+
+## Troubleshooting
+
+### Hard Fault
+
+During your first blinky debug-run, you may happen to find yourself in an infinite loop in the `blocking_handler()`, which is a weak implementation of the `hard_fault_handler()`. 
+
+Hard faults usually occur if there is incorrect memory address handling, among other things. It is very likely that your linkerscript.ld has incorrect memory details. The STM32F401RET6 used in the series has `512 KiB` of flash memory and `96 KiB` of SRAM. Your board may not have the same specs. These incorrect details are then passed on to the `reset_handler()`. It is the first function that is called by the mcu at boot, and it ends up assigning unavailable memory addresses to it's local pointer variables, leading to a hard fault.
+
+**Solution**: Simply edit the `ORIGIN` and `LENGTH` details of the `rom` (Flash) and `ram` (SRAM) in the linkerscript, as per your datasheet. Most STM32 Nucleo Boards have the same `ORIGIN`, or starting memory addresses for these memories, but you can get this information from the memory map, also available in the datasheet.
